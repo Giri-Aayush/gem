@@ -1,0 +1,85 @@
+your_name: Visakhapatnam Contractor
+locations:
+- Visakhapatnam
+- Vizag
+- Andhra Pradesh
+- AP
+- Eastern Naval Command
+- Waltair
+- Visakha
+- HPCL
+- BPCL
+- Gangavaram
+- Bheemunipatnam
+- Srikakulam
+- Vizianagaram
+my_work_types:
+- painting
+- paint
+- anti-corrosion
+- acrylic
+- waterproofing
+- whitewash
+- primer
+- coating
+- safety net
+- scaffold
+- scaffolding
+- fall protection
+- guardrail
+- civil works
+- civil work
+- repair
+- maintenance
+- renovation
+- construction
+- masonry
+- flooring
+- tiling
+- plumbing
+- carpentry
+- joinery
+- false ceiling
+- housekeeping
+- facility management
+- cleaning
+- sanitation
+- manpower supply
+- labour
+- gardening
+- horticulture
+- annual maintenance
+- AMC
+- supply of
+- supply and installation
+- fabrication
+- structural fabrication
+budget:
+  minimum: 100000
+  maximum: 20000000
+exclude_these_work_types:
+- electrical
+- high tension
+- HT cable
+- IT services
+- software
+- hardware supply
+- weapons
+- ammunition
+- explosives
+- submarine
+- aircraft
+- missile
+- radar
+- sonar
+- medical
+- pharmaceutical
+- printing
+run_every_day_at: 08:00
+email:
+  send_email: false
+  gmail_address: your_email@gmail.com
+  app_password: your-16-char-app-password
+  send_report_to: your_email@gmail.com
+minimum_match_score: 30
+look_back_days: 1
