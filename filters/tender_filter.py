@@ -17,6 +17,7 @@ Scoring breakdown:
 """
 
 import logging
+import re
 from typing import List
 
 from scrapers.models import Tender
@@ -30,9 +31,24 @@ def _normalise(text: str) -> str:
 
 
 def _contains_any(text: str, keywords: List[str]) -> List[str]:
-    """Return list of keywords found in text (case-insensitive)."""
+    """Return list of keywords found in text (case-insensitive substring)."""
     text_lower = _normalise(text)
     return [kw for kw in keywords if kw.lower() in text_lower]
+
+
+def _contains_any_word(text: str, keywords: List[str]) -> List[str]:
+    """Return keywords that appear as whole words/phrases in text.
+
+    Uses regex \\b word boundaries so that short keywords like "AP" match
+    "AP" or "(AP)" but NOT inside "weapons", "capacity", etc.
+    """
+    text_lower = _normalise(text)
+    hits = []
+    for kw in keywords:
+        pattern = r"\b" + re.escape(kw.lower()) + r"\b"
+        if re.search(pattern, text_lower):
+            hits.append(kw)
+    return hits
 
 
 def score_tender(tender: Tender, profile: dict) -> Tender:
@@ -68,13 +84,13 @@ def score_tender(tender: Tender, profile: dict) -> Tender:
         bonus = min(len(work_hits) - 1, 4) * 5
         score += bonus
 
-    # ── Location matching ─────────────────────────────────────────────────────
+    # ── Location matching (word-boundary to avoid "AP" matching in "weapons") ─
     location_corpus = " ".join([
         tender.location,
         tender.department,
         tender.title,
     ])
-    location_hits = _contains_any(location_corpus, profile.get("locations", []))
+    location_hits = _contains_any_word(location_corpus, profile.get("locations", []))
     if location_hits:
         score += 20
         tender.location_match = True

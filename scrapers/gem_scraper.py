@@ -47,23 +47,25 @@ _DATE_FMTS = [
     "%d-%m-%Y",
 ]
 
-# Search terms to use on GeM — each drives a separate keyword search.
-# Results from all searches are merged and deduplicated.
-GEM_SEARCH_TERMS = [
-    "painting",
-    "housekeeping",
-    "civil works",
-    "scaffolding",
-    "safety net",
-    "AMC maintenance",
-    "waterproofing",
-    "fabrication",
-    "cleaning sanitation",
-    "manpower supply",
+# Search terms are pulled from your work keywords in my_profile.yaml
+# so changes made in the Settings UI automatically feed into the next scrape.
+# We skip very short terms (< 3 chars) which are too broad for GeM's search,
+# and adjust pages-per-search to keep total scrape time under ~5 minutes.
+_FALLBACK_TERMS = [
+    "painting", "housekeeping", "civil works", "scaffolding",
+    "safety net", "waterproofing", "fabrication",
+    "cleaning sanitation", "manpower supply",
 ]
+_user_terms = [t for t in config.CONTRACTOR_PROFILE.get("work_keywords", []) if len(t) >= 3]
+GEM_SEARCH_TERMS = _user_terms if _user_terms else _FALLBACK_TERMS
 
-# Pages to scrape per search term (10 bids/page → 30 bids per keyword)
-PAGES_PER_SEARCH = 3
+# Adjust pages per search so total page loads stay ~30-40 regardless of term count
+if len(GEM_SEARCH_TERMS) <= 10:
+    PAGES_PER_SEARCH = 3
+elif len(GEM_SEARCH_TERMS) <= 20:
+    PAGES_PER_SEARCH = 2
+else:
+    PAGES_PER_SEARCH = 1
 
 
 def _parse_date(raw: str) -> Optional[datetime]:
